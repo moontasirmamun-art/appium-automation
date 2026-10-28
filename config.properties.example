@@ -1,0 +1,4 @@
+# Copy this file to config.properties and fill in your credentials
+therap.login.name=your_login_name
+therap.provider.code=your_provider_code
+therap.password=your_password
