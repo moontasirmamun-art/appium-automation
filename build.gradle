@@ -1,0 +1,71 @@
+plugins {
+    id 'java'
+}
+
+group = 'net.therap.mobile'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+configurations {
+    agent {
+        canBeResolved = true
+        canBeConsumed = true
+    }
+}
+
+ext {
+    appiumVersion = '9.4.0'
+    seleniumVersion = '4.28.0'
+    ownerVersion = '1.0.12'
+    univocityVersion = '2.9.1'
+    lombokVersion = '1.18.34'
+    jacksonVersion = '2.17.2'
+    allureVersion = '2.27.0'
+    aspectjVersion = '1.9.22.1'
+    junitBomVersion = '5.10.2'
+}
+
+dependencies {
+    agent "org.aspectj:aspectjweaver:${aspectjVersion}"
+
+    implementation "io.appium:java-client:${appiumVersion}"
+    implementation "org.seleniumhq.selenium:selenium-java:${seleniumVersion}"
+
+    implementation "org.aeonbits.owner:owner:${ownerVersion}"
+    implementation "com.univocity:univocity-parsers:${univocityVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    implementation "io.qameta.allure:allure-junit5:${allureVersion}"
+    implementation "com.github.automatedowl:allure-environment-writer:1.0.0"
+
+    testImplementation platform("org.junit:junit-bom:${junitBomVersion}")
+    testImplementation "org.junit.jupiter:junit-jupiter"
+    testImplementation "org.junit.jupiter:junit-jupiter-params"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform {
+        if (project.hasProperty('runTag')) {
+            includeTags project.property('runTag').toString()
+        }
+    }
+    ignoreFailures = true
+    jvmArgs = [ "-javaagent:${configurations.agent.singleFile}" ]
+    testLogging {
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+    }
+}

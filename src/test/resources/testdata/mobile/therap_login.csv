@@ -1,0 +1,7 @@
+Test Case ID,Test Case Description,Login Name,Password,Provider Code,Error Message
+TC-MOBILE-LOGIN-01,Valid Login and Logout,moontasir.mamun,therap321#,SQA-TH,
+TC-MOBILE-LOGIN-02,Invalid Provider Code,moontasir.mamun,therap321#,INVALID_PROV,Login Failed
+TC-MOBILE-LOGIN-03,Invalid Login Name,invalid.user.xyz,therap321#,SQA-TH,Login Failed
+TC-MOBILE-LOGIN-04,Invalid Password,moontasir.mamun,WrongPass123#,SQA-TH,Login Failed
+TC-MOBILE-LOGIN-05,Empty Field Validation,,,SQA-TH,Login screen remains displayed
+TC-MOBILE-LOGIN-06,Dismiss or Cancel Logout,moontasir.mamun,therap321#,SQA-TH,

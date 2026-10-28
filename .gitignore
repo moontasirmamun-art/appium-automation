@@ -7,6 +7,7 @@ build/
 # Local credentials and environment files
 config.properties
 .env
+*.png
 
 ### IntelliJ IDEA ###
 .idea/
