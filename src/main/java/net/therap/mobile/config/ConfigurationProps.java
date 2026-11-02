@@ -56,4 +56,8 @@ public interface ConfigurationProps extends Config {
     @Key("therap.password")
     @DefaultValue("")
     String therapPassword();
+
+    @Key("therap.offline.pin")
+    @DefaultValue("111111")
+    String therapOfflinePin();
 }

@@ -23,6 +23,9 @@ public class BaseTestData {
     @Parsed(field = "Provider Code", defaultNullRead = "")
     private String providerCode;
 
+    @Parsed(field = "Offline PIN", defaultNullRead = "")
+    private String offlinePin;
+
     @Parsed(field = "Error Message", defaultNullRead = "")
     private String errorMessage;
 }

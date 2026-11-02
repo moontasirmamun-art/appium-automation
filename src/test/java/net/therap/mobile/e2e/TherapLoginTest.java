@@ -45,18 +45,19 @@ public class TherapLoginTest extends BaseMobileTest {
     public void testInvalidProviderCode(LoginTestData testData) {
         String loginName = testData.getLoginName().isEmpty() ? config.therapLoginName() : testData.getLoginName();
         String providerCode = testData.getProviderCode();
-        String password = testData.getPassword().isEmpty() ? config.therapPassword() : testData.getPassword();
 
         loginPage.openTherapApp()
                 .enterLoginName(loginName)
                 .enterProviderCode(providerCode)
-                .clickLoginButton()
-                .enterPassword(password)
-                .clickSubmitCredentials();
+                .clickLoginButton();
 
-        Assertions.assertTrue(loginPage.isLoginFailedDisplayed(), "Login Failed screen should be displayed");
+        Assertions.assertTrue(loginPage.isAlertDialogDisplayed(), "Alert dialog should be displayed for invalid provider code");
+        if (testData.getErrorMessage() != null && !testData.getErrorMessage().isEmpty()) {
+            Assertions.assertTrue(loginPage.getAlertDialogMessage().contains(testData.getErrorMessage()),
+                    "Alert dialog should display expected error message");
+        }
 
-        loginPage.dismissLoginFailure();
+        loginPage.dismissAlertDialog();
         Assertions.assertTrue(loginPage.isLoginButtonDisplayed(), "Should return to Login screen after dismissing failure");
     }
 

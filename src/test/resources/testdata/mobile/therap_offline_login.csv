@@ -1,0 +1,5 @@
+Test Case ID,Test Case Description,Login Name,Offline PIN,Provider Code,Error Message
+TC-MOBILE-OFFLINE-01,Switch Between Online and Offline Login Modes,moontasir.mamun,,P1-MO,
+TC-MOBILE-OFFLINE-02,Empty Offline PIN Validation,moontasir.mamun,,P1-MO,Offline EVV Login
+TC-MOBILE-OFFLINE-03,Invalid Offline PIN Validation,moontasir.mamun,999999,P1-MO,Incorrect Username/Offline PIN or User Offline mode is Disabled.
+TC-MOBILE-OFFLINE-04,Valid Offline Login and Logout,moontasir.mamun,111111,P1-MO,

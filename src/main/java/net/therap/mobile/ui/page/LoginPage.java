@@ -18,6 +18,11 @@ public class LoginPage extends BasePage {
     private final By loginFailedHeader = AppiumBy.xpath("//*[contains(@text, 'Login Failed')]");
     private final By closeCustomTabButton = AppiumBy.xpath("//android.widget.ImageButton[@resource-id='com.android.chrome:id/close_button' or @content-desc='Close tab']");
     private final By cancelLoginButton = AppiumBy.xpath("//android.widget.Button[contains(@text, 'Cancel login')]");
+    private final By alertDialogMessage = AppiumBy.id("android:id/message");
+    private final By alertDialogOkButton = AppiumBy.id("android:id/button1");
+    private final By changeLoginModeButton = AppiumBy.id("net.therap.app:id/changeLoginMode");
+    private final By offlineLoginHeader = AppiumBy.id("net.therap.app:id/offline_login_header");
+    private final By offlinePinInput = AppiumBy.id("net.therap.app:id/edt_offline_pin");
 
     @Step("Launch Therap app from home screen")
     public LoginPage openTherapApp() {
@@ -135,6 +140,128 @@ public class LoginPage extends BasePage {
         cancelBtn.click();
         pause(1500);
         attachScreenshot("Cancelled Password Login");
+        return this;
+    }
+
+    @Step("Verify Alert Dialog is displayed")
+    public boolean isAlertDialogDisplayed() {
+        try {
+            return waitForPresence(alertDialogMessage).isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Step("Get Alert Dialog message text")
+    public String getAlertDialogMessage() {
+        try {
+            return waitForPresence(alertDialogMessage).getText();
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    @Step("Dismiss Alert Dialog by clicking OK")
+    public LoginPage dismissAlertDialog() {
+        try {
+            WebElement okBtn = waitForClickable(alertDialogOkButton);
+            okBtn.click();
+            pause(1500);
+        } catch (Exception e) {
+            driver.pressKey(new KeyEvent(AndroidKey.BACK));
+            pause(1500);
+        }
+        attachScreenshot("Dismissed Alert Dialog");
+        return this;
+    }
+
+    @Step("Check if 'Switch to Offline Login' button is displayed")
+    public boolean isSwitchToOfflineLoginDisplayed() {
+        try {
+            WebElement btn = waitForPresence(changeLoginModeButton);
+            return btn.isDisplayed() && btn.getText().toLowerCase().contains("offline");
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Step("Check if 'Switch to Online Login' button is displayed")
+    public boolean isSwitchToOnlineLoginDisplayed() {
+        try {
+            WebElement btn = waitForPresence(changeLoginModeButton);
+            return btn.isDisplayed() && btn.getText().toLowerCase().contains("online");
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Step("Switch to Offline Login mode")
+    public LoginPage switchToOfflineLogin() {
+        WebElement btn = waitForClickable(changeLoginModeButton);
+        if (btn.getText().toLowerCase().contains("offline")) {
+            btn.click();
+            pause(1500);
+            attachScreenshot("Switched to Offline Login Mode");
+        }
+        return this;
+    }
+
+    @Step("Switch to Online Login mode")
+    public LoginPage switchToOnlineLogin() {
+        WebElement btn = waitForClickable(changeLoginModeButton);
+        if (btn.getText().toLowerCase().contains("online")) {
+            btn.click();
+            pause(1500);
+            attachScreenshot("Switched to Online Login Mode");
+        }
+        return this;
+    }
+
+    @Step("Check if Offline Login header is displayed")
+    public boolean isOfflineLoginHeaderDisplayed() {
+        try {
+            return waitForPresence(offlineLoginHeader).isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Step("Get Offline Login header text")
+    public String getOfflineLoginHeaderText() {
+        try {
+            return waitForPresence(offlineLoginHeader).getText();
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    @Step("Enter Offline PIN: {pin}")
+    public LoginPage enterOfflinePin(String pin) {
+        WebElement pinField = waitForPresence(offlinePinInput);
+        pinField.clear();
+        if (pin != null && !pin.isEmpty()) {
+            pinField.sendKeys(pin);
+        }
+        pause(500);
+        hideKeyboardSafely();
+        return this;
+    }
+
+    @Step("Check if Offline PIN input is displayed")
+    public boolean isOfflinePinInputDisplayed() {
+        try {
+            return waitForPresence(offlinePinInput).isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Step("Click Offline Login button")
+    public LoginPage clickOfflineLoginButton() {
+        WebElement btn = waitForClickable(loginButton);
+        btn.click();
+        pause(2500);
+        attachScreenshot("Clicked Offline Login Button");
         return this;
     }
 }
