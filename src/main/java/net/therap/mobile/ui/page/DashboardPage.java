@@ -16,6 +16,16 @@ public class DashboardPage extends BasePage {
     private final By logoutButton = AppiumBy.id("net.therap.app:id/logout");
     private final By confirmLogoutButton = AppiumBy.xpath("//android.widget.Button[@text='LOGOUT' or @resource-id='android:id/button1']");
     private final By cancelLogoutButton = AppiumBy.xpath("//android.widget.Button[@text='CANCEL' or @resource-id='android:id/button2']");
+    private final By settingsCard = AppiumBy.xpath("//android.widget.TextView[@text='Settings']");
+
+    @Step("Open Settings from Dashboard")
+    public DashboardPage openSettings() {
+        WebElement btn = waitForClickable(settingsCard);
+        btn.click();
+        pause(1500);
+        attachScreenshot("Opened Settings from Dashboard");
+        return this;
+    }
 
     @Step("Verify Dashboard screen is displayed")
     public DashboardPage verifyDashboardLoaded() {

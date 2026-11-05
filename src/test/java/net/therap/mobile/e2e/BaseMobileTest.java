@@ -10,6 +10,8 @@ import net.therap.mobile.ui.page.AgreementPromptPage;
 import net.therap.mobile.ui.page.DashboardPage;
 import net.therap.mobile.ui.page.LoginPage;
 import net.therap.mobile.ui.page.OfflineAgendaPage;
+import net.therap.mobile.ui.page.OfflineConfigurationPage;
+import net.therap.mobile.ui.page.SettingsPage;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -26,6 +28,8 @@ public abstract class BaseMobileTest {
     protected AgreementPromptPage agreementPromptPage;
     protected DashboardPage dashboardPage;
     protected OfflineAgendaPage offlineAgendaPage;
+    protected SettingsPage settingsPage;
+    protected OfflineConfigurationPage offlineConfigurationPage;
     protected ConfigurationProps config = ConfigurationManager.getConfigurationProps();
 
     @RegisterExtension
@@ -48,6 +52,8 @@ public abstract class BaseMobileTest {
         agreementPromptPage = PageFactory.initPage(driver, AgreementPromptPage::new);
         dashboardPage = PageFactory.initPage(driver, DashboardPage::new);
         offlineAgendaPage = PageFactory.initPage(driver, OfflineAgendaPage::new);
+        settingsPage = PageFactory.initPage(driver, SettingsPage::new);
+        offlineConfigurationPage = PageFactory.initPage(driver, OfflineConfigurationPage::new);
     }
 
     @AfterEach

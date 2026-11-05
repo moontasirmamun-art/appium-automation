@@ -175,11 +175,21 @@ public class LoginPage extends BasePage {
         return this;
     }
 
+    @Step("Check if 'Switch to Offline Login' button is present")
+    public boolean isOfflineLoginOptionPresent() {
+        try {
+            return driver.findElements(changeLoginModeButton).size() > 0 &&
+                   driver.findElement(changeLoginModeButton).isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     @Step("Check if 'Switch to Offline Login' button is displayed")
     public boolean isSwitchToOfflineLoginDisplayed() {
         try {
-            WebElement btn = waitForPresence(changeLoginModeButton);
-            return btn.isDisplayed() && btn.getText().toLowerCase().contains("offline");
+            return driver.findElements(changeLoginModeButton).stream()
+                    .anyMatch(el -> el.isDisplayed() && el.getText().toLowerCase().contains("offline"));
         } catch (Exception e) {
             return false;
         }
@@ -188,8 +198,8 @@ public class LoginPage extends BasePage {
     @Step("Check if 'Switch to Online Login' button is displayed")
     public boolean isSwitchToOnlineLoginDisplayed() {
         try {
-            WebElement btn = waitForPresence(changeLoginModeButton);
-            return btn.isDisplayed() && btn.getText().toLowerCase().contains("online");
+            return driver.findElements(changeLoginModeButton).stream()
+                    .anyMatch(el -> el.isDisplayed() && el.getText().toLowerCase().contains("online"));
         } catch (Exception e) {
             return false;
         }

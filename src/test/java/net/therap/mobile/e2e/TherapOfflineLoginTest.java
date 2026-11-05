@@ -110,4 +110,169 @@ public class TherapOfflineLoginTest extends BaseMobileTest {
         Assertions.assertTrue(loginPage.isLoginButtonDisplayed() || loginPage.isOfflineLoginHeaderDisplayed(),
                 "Should return to login screen after logging out from offline mode");
     }
+
+    @Smoke
+    @Regression
+    @ParameterizedTest(name = "{0}")
+    @TestDataSource(id = "TC-MOBILE-OFFLINE-05", files = {"therap_offline_login.csv"}, targetType = LoginTestData.class)
+    @DisplayName("Verify offline login setup flow when offline login is not available on login screen")
+    public void testConfigureOfflineLoginFromSettings(LoginTestData testData) {
+        String loginName = testData.getLoginName().isEmpty() ? config.therapLoginName() : testData.getLoginName();
+        String providerCode = testData.getProviderCode().isEmpty() ? config.therapProviderCode() : testData.getProviderCode();
+        String password = testData.getPassword().isEmpty() ? config.therapPassword() : testData.getPassword();
+        String pin = testData.getOfflinePin().isEmpty() ? config.therapOfflinePin() : testData.getOfflinePin();
+
+        performOnlineLogin(loginName, providerCode, password);
+
+        dashboardPage.openSettings();
+        settingsPage.verifySettingsLoaded()
+                .openOfflineEvv();
+
+        offlineConfigurationPage.verifyOfflineConfigurationLoaded()
+                .enterOfflinePin(pin)
+                .enterConfirmOfflinePin(pin)
+                .clickSubmitPin();
+
+        Assertions.assertTrue(offlineConfigurationPage.isSuccessDialogDisplayed(),
+                "Success dialog should appear after configuring offline PIN");
+        offlineConfigurationPage.confirmSuccessDialog();
+
+        settingsPage.verifySettingsLoaded()
+                .navigateBack();
+
+        dashboardPage.verifyDashboardLoaded()
+                .logout();
+
+        Assertions.assertTrue(loginPage.isOfflineLoginOptionPresent(),
+                "Switch to Offline Login option should now be available on login screen");
+
+        loginPage.switchToOfflineLogin();
+        Assertions.assertTrue(loginPage.isOfflineLoginHeaderDisplayed(),
+                "Offline EVV Login header should be displayed");
+        Assertions.assertTrue(loginPage.isOfflinePinInputDisplayed(),
+                "Offline PIN field should be displayed");
+    }
+
+    @Validation
+    @ParameterizedTest(name = "{0}")
+    @TestDataSource(id = "TC-MOBILE-OFFLINE-06", files = {"therap_offline_login.csv"}, targetType = LoginTestData.class)
+    @DisplayName("Verify validation when Offline PIN and Confirm PIN do not match")
+    public void testOfflinePinMismatchValidation(LoginTestData testData) {
+        String loginName = testData.getLoginName().isEmpty() ? config.therapLoginName() : testData.getLoginName();
+        String providerCode = testData.getProviderCode().isEmpty() ? config.therapProviderCode() : testData.getProviderCode();
+        String password = testData.getPassword().isEmpty() ? config.therapPassword() : testData.getPassword();
+        String pin = testData.getOfflinePin().isEmpty() ? config.therapOfflinePin() : testData.getOfflinePin();
+
+        performOnlineLogin(loginName, providerCode, password);
+
+        dashboardPage.openSettings();
+        settingsPage.verifySettingsLoaded()
+                .openOfflineEvv();
+
+        offlineConfigurationPage.verifyOfflineConfigurationLoaded()
+                .enterOfflinePin(pin)
+                .enterConfirmOfflinePin("654321")
+                .clickSubmitPin();
+
+        Assertions.assertTrue(offlineConfigurationPage.isValidationErrorDisplayed(),
+                "Validation error should be displayed for mismatched PIN");
+        if (testData.getErrorMessage() != null && !testData.getErrorMessage().isEmpty()) {
+            Assertions.assertTrue(offlineConfigurationPage.getValidationErrorMessage().contains(testData.getErrorMessage()),
+                    "Error message should indicate PIN mismatch");
+        }
+
+        offlineConfigurationPage.navigateBack();
+        settingsPage.navigateBack();
+        dashboardPage.logout();
+    }
+
+    @Validation
+    @ParameterizedTest(name = "{0}")
+    @TestDataSource(id = "TC-MOBILE-OFFLINE-07", files = {"therap_offline_login.csv"}, targetType = LoginTestData.class)
+    @DisplayName("Verify validation when Offline PIN length is fewer than six digits")
+    public void testShortOfflinePinValidation(LoginTestData testData) {
+        String loginName = testData.getLoginName().isEmpty() ? config.therapLoginName() : testData.getLoginName();
+        String providerCode = testData.getProviderCode().isEmpty() ? config.therapProviderCode() : testData.getProviderCode();
+        String password = testData.getPassword().isEmpty() ? config.therapPassword() : testData.getPassword();
+        String shortPin = testData.getOfflinePin().isEmpty() ? "1234" : testData.getOfflinePin();
+
+        performOnlineLogin(loginName, providerCode, password);
+
+        dashboardPage.openSettings();
+        settingsPage.verifySettingsLoaded()
+                .openOfflineEvv();
+
+        offlineConfigurationPage.verifyOfflineConfigurationLoaded()
+                .enterOfflinePin(shortPin)
+                .enterConfirmOfflinePin(shortPin)
+                .clickSubmitPin();
+
+        Assertions.assertTrue(offlineConfigurationPage.isValidationErrorDisplayed(),
+                "Validation error should be displayed for short PIN length");
+        if (testData.getErrorMessage() != null && !testData.getErrorMessage().isEmpty()) {
+            Assertions.assertTrue(offlineConfigurationPage.getValidationErrorMessage().contains(testData.getErrorMessage()),
+                    "Error message should indicate six digits requirement");
+        }
+
+        offlineConfigurationPage.navigateBack();
+        settingsPage.navigateBack();
+        dashboardPage.logout();
+    }
+
+    @Regression
+    @ParameterizedTest(name = "{0}")
+    @TestDataSource(id = "TC-MOBILE-OFFLINE-08", files = {"therap_offline_login.csv"}, targetType = LoginTestData.class)
+    @DisplayName("Verify updating existing configured Offline PIN and authenticating with new PIN")
+    public void testChangeOfflinePin(LoginTestData testData) {
+        String loginName = testData.getLoginName().isEmpty() ? config.therapLoginName() : testData.getLoginName();
+        String providerCode = testData.getProviderCode().isEmpty() ? config.therapProviderCode() : testData.getProviderCode();
+        String password = testData.getPassword().isEmpty() ? config.therapPassword() : testData.getPassword();
+        String newPin = testData.getOfflinePin().isEmpty() ? "222222" : testData.getOfflinePin();
+
+        performOnlineLogin(loginName, providerCode, password);
+
+        dashboardPage.openSettings();
+        settingsPage.verifySettingsLoaded()
+                .openOfflineEvv();
+
+        offlineConfigurationPage.verifyOfflineConfigurationLoaded()
+                .enterOfflinePin(newPin)
+                .enterConfirmOfflinePin(newPin)
+                .clickSubmitPin();
+
+        Assertions.assertTrue(offlineConfigurationPage.isSuccessDialogDisplayed(),
+                "Success dialog should appear after updating offline PIN");
+        offlineConfigurationPage.confirmSuccessDialog();
+
+        settingsPage.verifySettingsLoaded()
+                .navigateBack();
+
+        dashboardPage.verifyDashboardLoaded()
+                .logout();
+
+        loginPage.switchToOfflineLogin()
+                .enterLoginName(loginName)
+                .enterProviderCode(providerCode)
+                .enterOfflinePin(newPin)
+                .clickOfflineLoginButton();
+
+        Assertions.assertTrue(offlineAgendaPage.isOfflineSlotsHeaderDisplayed(),
+                "Should land on Offline Slots screen with updated PIN");
+
+        offlineAgendaPage.logout();
+    }
+
+    private void performOnlineLogin(String loginName, String providerCode, String password) {
+        loginPage.openTherapApp();
+        if (loginPage.isSwitchToOnlineLoginDisplayed()) {
+            loginPage.switchToOnlineLogin();
+        }
+        loginPage.enterLoginName(loginName)
+                .enterProviderCode(providerCode)
+                .clickLoginButton()
+                .enterPassword(password)
+                .clickSubmitCredentials();
+        agreementPromptPage.handleAgreements();
+        dashboardPage.verifyDashboardLoaded();
+    }
 }

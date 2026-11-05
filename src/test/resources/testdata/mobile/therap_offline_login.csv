@@ -1,5 +1,9 @@
-Test Case ID,Test Case Description,Login Name,Offline PIN,Provider Code,Error Message
-TC-MOBILE-OFFLINE-01,Switch Between Online and Offline Login Modes,moontasir.mamun,,P1-MO,
-TC-MOBILE-OFFLINE-02,Empty Offline PIN Validation,moontasir.mamun,,P1-MO,Offline EVV Login
-TC-MOBILE-OFFLINE-03,Invalid Offline PIN Validation,moontasir.mamun,999999,P1-MO,Incorrect Username/Offline PIN or User Offline mode is Disabled.
-TC-MOBILE-OFFLINE-04,Valid Offline Login and Logout,moontasir.mamun,111111,P1-MO,
+Test Case ID,Test Case Description,Login Name,Password,Offline PIN,Provider Code,Error Message
+TC-MOBILE-OFFLINE-01,Switch Between Online and Offline Login Modes,moontasir.mamun,,,P1-MO,
+TC-MOBILE-OFFLINE-02,Empty Offline PIN Validation,moontasir.mamun,,,P1-MO,Offline EVV Login
+TC-MOBILE-OFFLINE-03,Invalid Offline PIN Validation,moontasir.mamun,,999999,P1-MO,Incorrect Username/Offline PIN or User Offline mode is Disabled.
+TC-MOBILE-OFFLINE-04,Valid Offline Login and Logout,moontasir.mamun,,111111,P1-MO,
+TC-MOBILE-OFFLINE-05,Configure Offline Login when Not Available,moontasir.mamun,therap321#,111111,P1-MO,
+TC-MOBILE-OFFLINE-06,Offline PIN Mismatch Validation,moontasir.mamun,therap321#,111111,P1-MO,PINs Don't Match
+TC-MOBILE-OFFLINE-07,Short Offline PIN Length Validation,moontasir.mamun,therap321#,1234,P1-MO,Your PIN must be six digits
+TC-MOBILE-OFFLINE-08,Change Configured Offline PIN,moontasir.mamun,therap321#,222222,P1-MO,
